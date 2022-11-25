@@ -1,0 +1,9 @@
+@import "normalize";
+
+html, body, #app {
+  height: 100%;
+}
+
+body.no-scroll {
+  overflow: hidden;
+}

@@ -1,0 +1,26 @@
+version: '3.9'
+
+services:
+  front:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: vue-onix-base
+    env_file:
+      - .env
+    restart: unless-stopped
+    ports:
+      - ${BIND_ADDRESS:-0.0.0.0}:${PORT:-9001}:80
+    networks:
+      - vue-onix-base-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10M"
+        max-file: "5"
+
+networks:
+  vue-onix-base-net:
+    name: vue-onix-base-net
+    driver: bridge
+    external: false

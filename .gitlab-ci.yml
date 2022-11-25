@@ -1,0 +1,60 @@
+image: docker:latest
+
+stages:
+  - build
+  - deploy
+
+sonarqube-check:
+  stage: build
+  tags:
+    - kuber
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+    GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script:
+    - sonar-scanner
+  allow_failure: true
+  only:
+    - dev # or the name of your main branch
+    - merge_requests
+    - develop
+
+sonarqube-pr-decoration:
+  stage: build
+  script:
+    - echo sonar.pullrequest.key=$CI_MERGE_REQUEST_IID >> sonar-project.properties
+    - echo sonar.pullrequest.branch=$CI_MERGE_REQUEST_BRANCH_NAME >> sonar-project.properties
+  only:
+    - dev
+    - merge_requests
+  tags:
+    - kuber
+
+Build:
+  only:
+    - dev
+  tags:
+    - kuber
+  stage: build
+  image: ${BUILD_DOCKER_IMAGE}
+  script:
+    - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
+    - docker build --build-arg VUE_APP_API_URL=${VUE_APP_API_URL} --network=host -t ${DOCKER_REPOSITORY_IMAGE} .
+    - docker push ${DOCKER_REPOSITORY_IMAGE}
+
+Deploy:
+  tags:
+    - kuber
+  stage: deploy
+  only:
+    - dev
+  image: ${DEPLOY_DOCKER_IMAGE}
+  script:
+    - grdp-ctl
