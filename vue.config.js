@@ -7,11 +7,11 @@ if (process.env.NODE_ENV === "production") {
   const PrerenderPlugin = require("prerender-spa-plugin-next");
 
   plugins.unshift(
-      new PrerenderPlugin({
-        staticDir: join(__dirname, "dist"),
-        routes: ["/"],
-        renderAfterDocumentEvent: "render-event",
-      })
+    new PrerenderPlugin({
+      staticDir: join(__dirname, "dist"),
+      routes: ["/"],
+      renderAfterDocumentEvent: "render-event",
+    })
   );
 }
 
