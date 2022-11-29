@@ -3,15 +3,17 @@ import { RouteRecordRaw } from "vue-router";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    name: "Landing",
+    name: "StartCards",
     component: () =>
-      import(/* webpackChunkName: "landing" */ "../views/LandingView.vue"),
+      import(
+        /* webpackChunkName: "start-cards" */ "../components/StartCards.vue"
+      ),
   },
   {
-    path: "/login",
-    name: "Login",
+    path: "/search",
+    name: "SearchView",
     component: () =>
-      import(/* webpackChunkName: "login" */ "../views/LoginView.vue"),
+      import(/* webpackChunkName: "search-view" */ "../views/SearchView.vue"),
   },
   {
     path: "/registration",
