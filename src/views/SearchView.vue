@@ -1,7 +1,7 @@
 <template lang="html">
-  <div class="search-view">
-    <SearchInput />
-    <div class="w-100">
+  <div class="search-view" :class="{ found: spotifyStore.spotify }">
+    <SearchInput :found="spotifyStore.spotify" />
+    <div class="w-100 d-flex flex-column">
       <ListGroup
         v-for="(track, key) in spotifyStore.getSpotify"
         :key="key"
@@ -39,6 +39,9 @@ $hint: #faf8f8;
   transition: background-color 1.25s ease-in-out;
   &.is-focus {
     background-color: $turqoise;
+  }
+  &.found {
+    display: initial;
   }
 }
 </style>

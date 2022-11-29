@@ -1,6 +1,6 @@
 <template>
-  <main class="search-input-container">
-    <div class="title-container">
+  <main class="search-input-container" :class="{ fixed: found }">
+    <div class="title-container" :class="{ none: found }">
       <h1 class="title">It's all about context.</h1>
       <h1 class="title-down">
         You search in Spotify
@@ -8,7 +8,7 @@
       </h1>
     </div>
 
-    <fieldset class="field-container">
+    <fieldset class="field-container" :class="{ fixed: found }">
       <input
         @input="search(searchInputValue)"
         v-model="searchInputValue"
@@ -28,8 +28,13 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, defineProps } from "vue";
 import { useSpotifyStore } from "@/store/spotify";
+
+const props = defineProps({
+  found: Object,
+  default: () => undefined,
+});
 
 const searchInputValue = ref("");
 const spotifyStore = useSpotifyStore();
@@ -152,6 +157,13 @@ $snappy: cubic-bezier(0.694, 0.048, 0.335, 1);
   align-items: center;
   flex-direction: column;
   gap: 30px;
+
+  &.fixed {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: aliceblue;
+  }
 }
 
 .title-container {
@@ -160,6 +172,9 @@ $snappy: cubic-bezier(0.694, 0.048, 0.335, 1);
   text-align: center;
   overflow: hidden;
   z-index: 2;
+  &.none {
+    display: none;
+  }
   .title {
     transform: translateY(-100%);
     transition: transform 0.3s ease;
@@ -202,6 +217,10 @@ $snappy: cubic-bezier(0.694, 0.048, 0.335, 1);
   display: flex;
   justify-content: center;
   align-items: center;
+  &.fixed {
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
 }
 
 .icons-container {

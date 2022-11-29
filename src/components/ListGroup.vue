@@ -27,5 +27,6 @@ const trackName = computed(() => {
 <style scoped lang="scss">
 .list-group {
   width: 100%;
+  border-radius: 0;
 }
 </style>
