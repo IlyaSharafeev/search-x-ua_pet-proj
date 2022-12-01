@@ -1,6 +1,12 @@
 <template lang="pug">
 main.page-content
-  StartCard(v-for="(card, key) of cards", :key="key", :card="card")
+  StartCard(
+    v-for="(card, key) of cards",
+    :key="key",
+    :card="card",
+    data-aos="fade-up",
+    data-aos-duration="1000"
+  )
 </template>
 
 <script lang="ts" setup>

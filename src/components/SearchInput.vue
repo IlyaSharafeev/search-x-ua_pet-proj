@@ -1,5 +1,5 @@
 <template>
-  <main class="search-input-container" :class="{ fixed: found }">
+  <main data-aos="fade-down" :class="{ fixed: found }">
     <div class="title-container" :class="{ none: found }">
       <h1 class="title">It's all about context.</h1>
       <h1 class="title-down">
@@ -8,7 +8,7 @@
       </h1>
     </div>
 
-    <fieldset class="field-container" :class="{ fixed: found }">
+    <div class="field-container" :class="{ fixed: found }">
       <input
         @input="search(searchInputValue)"
         v-model="searchInputValue"
@@ -23,7 +23,7 @@
           <div class="x-down"></div>
         </div>
       </div>
-    </fieldset>
+    </div>
   </main>
 </template>
 
@@ -61,7 +61,11 @@ const checkInputState = () => {
 };
 
 const search = debounce((searchValue: string) => {
-  spotifyStore.searchSpotify(searchValue);
+  if (searchValue !== "") {
+    spotifyStore.searchSpotify(searchValue);
+    const searchElement = document.querySelector('main[data-aos="fade-down"]');
+    searchElement.removeAttribute("data-aos");
+  }
 }, 2000);
 
 const clearSearchInput = () => {
@@ -218,8 +222,7 @@ $snappy: cubic-bezier(0.694, 0.048, 0.335, 1);
   justify-content: center;
   align-items: center;
   &.fixed {
-    margin-top: 30px;
-    margin-bottom: 30px;
+    margin: 30px auto;
   }
 }
 

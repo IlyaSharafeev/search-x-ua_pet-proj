@@ -5,11 +5,16 @@
       h5.mb-1 {{ track.name }}
       small 3 days ago
     p.mb-1 Some placeholder content in a paragraph.
-    small And some small print.
+    ListGroupArtists(
+      v-for="(artist, key) of track.artists.items",
+      :key="key",
+      :artists="artist"
+    )
 </template>
 
 <script lang="ts" setup>
 import { defineProps } from "vue";
+import ListGroupArtists from "@/components/ListGroupArtists.vue";
 
 defineProps({
   track: {

@@ -23,9 +23,9 @@ export const useSpotifyStore = defineStore("spotifyStore", () => {
   const searchSpotify = async (searchString: string) => {
     options.params.q = searchString;
     spotify.value = await axios.get(`${api}/search/`, options).then((data) => {
+      console.log(data.data.tracks.items);
       return data.data.tracks.items;
     });
-    console.log(spotify.value);
   };
 
   const getSpotify = computed(() => {
