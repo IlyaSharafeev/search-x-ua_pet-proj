@@ -31,7 +31,7 @@
 import { onMounted, ref, defineProps } from "vue";
 import { useSpotifyStore } from "@/store/spotify";
 
-const props = defineProps({
+defineProps({
   found: Object,
   default: () => undefined,
 });
@@ -307,10 +307,10 @@ $snappy: cubic-bezier(0.694, 0.048, 0.335, 1);
     }
   }
   .is-type & {
-    &:before {
-      opacity: 1;
-      animation: spin 0.85s infinite;
-    }
+    //&:before {
+    //  opacity: 1;
+    //  animation: spin 0.85s infinite;
+    //}
     .x-up {
       &:before,
       &:after {

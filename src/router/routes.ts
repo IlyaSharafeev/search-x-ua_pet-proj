@@ -6,7 +6,7 @@ const routes: Array<RouteRecordRaw> = [
     name: "StartCards",
     component: () =>
       import(
-        /* webpackChunkName: "start-cards" */ "../components/StartCards.vue"
+        /* webpackChunkName: "start-cards" */ "../views/StartCardsView.vue"
       ),
   },
   {

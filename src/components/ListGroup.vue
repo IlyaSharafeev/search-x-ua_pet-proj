@@ -2,7 +2,7 @@
 .list-group
   a.list-group-item.list-group-item-action(:href="track.uri")
     .d-flex.w-100.justify-content-between
-      h5.mb-1 {{ trackName }}
+      h5.mb-1 {{ track.name }}
       small 3 days ago
     p.mb-1 Some placeholder content in a paragraph.
     small And some small print.
@@ -10,17 +10,12 @@
 
 <script lang="ts" setup>
 import { defineProps } from "vue";
-import { computed } from "vue";
 
-const props = defineProps({
+defineProps({
   track: {
     type: Object,
     default: () => undefined,
   },
-});
-
-const trackName = computed(() => {
-  return props.track?.name;
 });
 </script>
 

@@ -1,19 +1,19 @@
 <template lang="pug">
-- var cards = [{ title: 'Spotify', copy: 'find the track and go to the app', button: 'Search' }, { title: 'To The Beach', copy: 'Plan your next beach trip with these fabulous destinations', button: 'View Trips' }, { title: 'Desert Destinations', copy: 'It\'s the desert you\'ve always dreamed of', button: 'Book Now' }, { title: 'Explore The Galaxy', copy: 'Seriously, straight up, just blast off into outer space today', button: 'Book Now' }]
-
-mixin card(title, copy, button)
-  router-link.card(:to="{ name: 'SearchView' }")
-    .content
-      h2.title= title
-      p.copy= copy
-      button.btn= button
-
-main.page-content
-  each card in cards
-    +card(card.title, card.copy, card.button)
+router-link.card(:to="{ name: 'SearchView' }")
+  .content
+    h2.title {{ card.title }}
+    p.copy {{ card.copy }}
+    button.btn {{ card.button }}
 </template>
 
-<script></script>
+<script lang="ts" setup>
+import { defineProps } from "vue";
+
+defineProps({
+  card: Object,
+  default: () => undefined,
+});
+</script>
 
 <style lang="scss" scoped>
 @import url("https://fonts.googleapis.com/css?family=Cardo:400i|Rubik:400,700&display=swap");
@@ -21,8 +21,8 @@ main.page-content
 $imageIds: "background-spotify.png", "background-spotify-2.png",
   "background-spotify-3.png", "background-spotify-4.png";
 
-$bp-md: 600px;
-$bp-lg: 800px;
+$bp-mobile: 600px;
+$bp-tablet: 900px;
 
 * {
   box-sizing: border-box;
@@ -54,11 +54,11 @@ body {
     rgba(148, 187, 233, 1) 100%
   );
 
-  @media (min-width: $bp-md) {
-    grid-template-columns: repeat(2, 1fr);
+  @media (max-width: $bp-mobile) {
+    flex-direction: column;
   }
 
-  @media (min-width: $bp-lg) {
+  @media (max-width: $bp-tablet) {
     grid-template-columns: repeat(4, 1fr);
   }
 }
@@ -78,8 +78,17 @@ body {
     0 4px 4px rgba(0, 0, 0, 0.1), 0 8px 8px rgba(0, 0, 0, 0.1),
     0 16px 16px rgba(0, 0, 0, 0.1);
 
-  @media (min-width: $bp-md) {
+  @media (min-width: $bp-mobile) {
     height: 350px;
+  }
+
+  @media (max-width: $bp-mobile) {
+    justify-content: initial;
+    padding: initial;
+  }
+
+  @media (max-width: $bp-tablet) {
+    justify-content: center;
   }
 
   &:before {
@@ -187,7 +196,7 @@ body {
   }
 }
 
-@media (hover: hover) and (min-width: $bp-md) {
+@media (hover: hover) and (min-width: $bp-tablet) {
   .card:after {
     transform: translateY(0);
   }
@@ -209,6 +218,7 @@ body {
     &:before {
       transform: translateY(-4%);
     }
+
     &:after {
       transform: translateY(-50%);
     }

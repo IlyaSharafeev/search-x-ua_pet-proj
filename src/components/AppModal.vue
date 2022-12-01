@@ -14,7 +14,7 @@ import { defineEmits, defineProps, onBeforeUnmount } from "vue";
 import useDisableScroll from "@/features/useDisableScroll";
 
 const emit = defineEmits(["close", "submit"]);
-const props = defineProps({
+defineProps({
   isOpen: { type: Boolean, default: false },
 });
 
