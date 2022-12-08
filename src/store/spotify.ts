@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import { computed, ref } from "vue";
+import { Tracks } from "@/types/Tracks";
 
 const api = "https://spotify23.p.rapidapi.com";
 const options = {
@@ -23,12 +24,11 @@ export const useSpotifyStore = defineStore("spotifyStore", () => {
   const searchSpotify = async (searchString: string) => {
     options.params.q = searchString;
     spotify.value = await axios.get(`${api}/search/`, options).then((data) => {
-      console.log(data.data.tracks.items);
       return data.data.tracks.items;
     });
   };
 
-  const getSpotify = computed(() => {
+  const getSpotify = computed((): Tracks => {
     return spotify.value;
   });
 
