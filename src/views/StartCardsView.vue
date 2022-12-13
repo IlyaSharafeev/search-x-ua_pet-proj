@@ -17,21 +17,25 @@ const cards = [
     title: "Spotify",
     copy: "find the track and go to the app",
     button: "Search",
+    link: "SearchView",
   },
   {
-    title: "To The Beach",
-    copy: "Plan your next beach trip with these fabulous destinations",
-    button: "View Trips",
+    title: "Typing training",
+    copy: "Practice typing keys as fast as possible and see statistics",
+    button: "Train",
+    link: "KeyboardTrainingView",
   },
   {
     title: "Desert Destinations",
     copy: "It's the desert you've always dreamed of",
     button: "Book Now",
+    link: "SearchView",
   },
   {
     title: "Explore The Galaxy",
     copy: "Seriously, straight up, just blast off into outer space today",
     button: "Book Now",
+    link: "SearchView",
   },
 ];
 </script>

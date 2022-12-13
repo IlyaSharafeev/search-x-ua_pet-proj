@@ -16,6 +16,14 @@ const routes: Array<RouteRecordRaw> = [
       import(/* webpackChunkName: "search-view" */ "../views/SearchView.vue"),
   },
   {
+    path: "/keyboard-training",
+    name: "KeyboardTrainingView",
+    component: () =>
+      import(
+        /* webpackChunkName: "keyboard-training" */ "../views/KeyboardTrainingView.vue"
+      ),
+  },
+  {
     path: "/registration",
     name: "Registration",
     component: () =>

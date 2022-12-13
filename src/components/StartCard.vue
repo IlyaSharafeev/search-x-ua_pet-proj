@@ -1,5 +1,5 @@
 <template lang="pug">
-router-link.card(:to="{ name: 'SearchView' }")
+router-link.card(:to="{ name: card.link }")
   .content
     h2.title {{ card.title }}
     p.copy {{ card.copy }}
