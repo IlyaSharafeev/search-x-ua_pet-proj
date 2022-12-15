@@ -6,6 +6,7 @@ import "@/scss/styles.scss";
 import { createPinia } from "pinia";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 import { PiniaSharedState } from "pinia-shared-state";
+import VueFeather from "vue-feather";
 // import * as Sentry from "@sentry/vue";
 // import { Integrations } from "@sentry/tracing";
 
@@ -36,3 +37,4 @@ const app = createApp(App);
 
 app.use(AOS.init() as never);
 app.use(pinia).use(router).mount("#app");
+app.component(VueFeather.name, VueFeather);

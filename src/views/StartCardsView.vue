@@ -26,10 +26,10 @@ const cards = [
     link: "KeyboardTrainingView",
   },
   {
-    title: "Desert Destinations",
-    copy: "It's the desert you've always dreamed of",
-    button: "Book Now",
-    link: "SearchView",
+    title: "Weather forecast",
+    copy: "Here you can check the weather in your region",
+    button: "See",
+    link: "WeatherView",
   },
   {
     title: "Explore The Galaxy",

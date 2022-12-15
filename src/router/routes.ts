@@ -24,6 +24,14 @@ const routes: Array<RouteRecordRaw> = [
       ),
   },
   {
+    path: "/weather",
+    name: "WeatherView",
+    component: () =>
+      import(
+        /* webpackChunkName: "keyboard-training" */ "../views/WeatherView.vue"
+      ),
+  },
+  {
     path: "/registration",
     name: "Registration",
     component: () =>
