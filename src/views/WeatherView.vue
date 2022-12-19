@@ -1,17 +1,21 @@
 <template lang="pug">
-.wrapper
-  .container
+.wrapper(v-if="weatherStore.getSpinnerState")
+  .container(v-if="weatherStore.getWeatherCurrentLocation")
+    .switch__1
+      input#switch-1(type="checkbox")
+      label(for="switch-1")
     .weather-side
       .weather-gradient
       .date-container
-        h2.date-dayname Tuesday
-        span.date-day 15 Jan 2019
+        h2.date-dayname {{ getCurrentDay() }}
+        span.date-day {{ weatherStore.getWeatherCurrentLocation.current.last_updated }}
         vue-feather.location-icon(type="map-pin")
-        span.location Paris, FR
+        span.location {{ weatherStore.getWeatherCurrentLocation.location.name }},
+        span.location {{ weatherStore.getWeatherCurrentLocation.location.country }}
       .weather-container
         vue-faether.weather-icon(type="sun")
-        h1.weather-temp 29°C
-        h3.weather-desc Sunny
+        h1.weather-temp {{ weatherStore.getWeatherCurrentLocation.current.temp_c }}°C
+        h3.weather-desc {{ weatherStore.getWeatherCurrentLocation.current.condition.text }}
     .info-side
       .today-info-container
         .today-info
@@ -21,11 +25,11 @@
             .clear
           .humidity
             span.title HUMIDITY
-            span.value 34 %
+            span.value {{ weatherStore.getWeatherCurrentLocation.current.humidity }} %
             .clear
           .wind
             span.title WIND
-            span.value 0 km/h
+            span.value {{ weatherStore.getWeatherCurrentLocation.current.wind_kph }} km/h
             .clear
       .week-container
         ul.week-list
@@ -59,35 +63,18 @@
           :cancel-url="cancelUrl",
           @loading="(v) => (loading = v)"
         )
+SpinnerView(v-else)
 </template>
 
 <script setup>
 import { StripeCheckout } from "@vue-stripe/vue-stripe";
-import { ref } from "vue";
-// import { useWeatherStore } from "@/store/weather";
+import { onMounted, ref } from "vue";
+import { useWeatherStore } from "../store/weather";
+import SpinnerView from "./SpinnerView";
+import CONSTANTS from "../constants/index";
 
-// export default {
-//   data() {
-//     return {
-//       publishableKey: "pk_test_51METmBD1sVm68Cku2ln2Me93Wp255VHtagJz4c95XHXP7Y2OgdQSMgt4PZ7JljB8s1eKLBGyuOwJ67JcANzRqjht00T5y5lwSF",
-//       loading: false,
-//       lineItems: [
-//         {
-//           price: "price_1MEWuND1sVm68CkueiKKVU0T",
-//           quantity: 1,
-//         },
-//       ],
-//       successUrl: "http://localhost:8080/weather",
-//       cancelUrl: "http://localhost:8080/error",
-//     };
-//   },
-//   methods: {
-//     submit() {
-//       this.$refs.checkoutRef.redirectToCheckout();
-//     },
-//   },
-// };
 const checkoutRef = ref(null);
+const weatherStore = useWeatherStore();
 const publishableKey = ref(
   "pk_test_51METmBD1sVm68Cku2ln2Me93Wp255VHtagJz4c95XHXP7Y2OgdQSMgt4PZ7JljB8s1eKLBGyuOwJ67JcANzRqjht00T5y5lwSF"
 );
@@ -104,6 +91,17 @@ const cancelUrl = "http://localhost:8080/error";
 const submit = () => {
   checkoutRef.value.redirectToCheckout();
 };
+
+const getCurrentDay = () => {
+  const date = new Date();
+  const day = date.getDay();
+  return CONSTANTS.days[day - 1];
+};
+
+onMounted(async () => {
+  await weatherStore.setWeatherCurrentLocation("Lviv");
+  await console.log(weatherStore.getWeatherCurrentLocation);
+});
 </script>
 
 <style scoped lang="scss">
@@ -186,6 +184,7 @@ $gradient: linear-gradient(135deg, #72edf2 10%, #5151e5 100%);
 .location {
   display: inline-block;
   margin-top: 10px;
+  margin-right: 10px;
 }
 .location-icon {
   display: inline-block;
@@ -317,6 +316,75 @@ $gradient: linear-gradient(135deg, #72edf2 10%, #5151e5 100%);
     height: 1em;
     width: auto;
     margin-right: 5px;
+  }
+}
+
+/*  SWITCH  */
+$shadow: 0.3rem 0.3rem 0.6rem var(--greyLight-2),
+  -0.2rem -0.2rem 0.5rem var(--white);
+$inner-shadow: inset 0.2rem 0.2rem 0.5rem var(--greyLight-2),
+  inset -0.2rem -0.2rem 0.5rem var(--white);
+
+.switch {
+  grid-column: 1 / 2;
+  display: grid;
+  grid-template-columns: repeat(2, min-content);
+  grid-gap: 3rem;
+  justify-self: center;
+  input {
+    display: none;
+  }
+
+  &__1,
+  &__2 {
+    width: 6rem;
+    label {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      height: 3rem;
+      box-shadow: $shadow;
+      background: rgba(255, 255, 255, 0);
+      position: relative;
+      cursor: pointer;
+      border-radius: 1.6rem;
+
+      &::after {
+        content: "";
+        position: absolute;
+        left: 0.4rem;
+        width: 2.1rem;
+        height: 2.1rem;
+        border-radius: 50%;
+        background: var(--greyDark);
+        transition: all 0.4s ease;
+      }
+      &::before {
+        content: "";
+        width: 100%;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(
+          330deg,
+          var(--primary-dark) 0%,
+          var(--primary) 50%,
+          var(--primary-light) 100%
+        );
+        opacity: 0;
+        transition: all 0.4s ease;
+      }
+    }
+  }
+  & input:checked {
+    & ~ label {
+      &::before {
+        opacity: 1;
+      }
+      &::after {
+        left: 57%;
+        background: var(--greyLight-1);
+      }
+    }
   }
 }
 </style>

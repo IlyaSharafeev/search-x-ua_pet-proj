@@ -5,30 +5,34 @@ import axios from "axios";
 const api = "https://weatherapi-com.p.rapidapi.com/current.json";
 
 const options = {
-  params: { q: "Lviv" },
+  params: { q: "" },
   headers: {
-    "X-RapidAPI-Key": "d6318cbb8dmsha9d0ea67d7d12dap19e98fjsn97783168f7e2",
+    "X-RapidAPI-Key": "f1c9b7bff6msh6ce128dd9894ed2p1185d2jsna3727f8b0c21",
     "X-RapidAPI-Host": "weatherapi-com.p.rapidapi.com",
   },
 };
 
 export const useWeatherStore = defineStore("weather", () => {
-  const weather = ref();
+  const weather = ref(null);
+  const loadingVisible = ref(false);
 
   const setWeatherCurrentLocation = async (searchLocation: string) => {
     options.params.q = searchLocation;
-    weather.value = await axios.get(`${api}`, options).then((data) => {
-      return data.data.tracks.items;
+    loadingVisible.value = true;
+    await axios.get(`${api}`, options).then((response) => {
+      weather.value = response.data;
+      return response.data;
     });
+    loadingVisible.value = true;
   };
 
-  const getWeatherCurrentLocation = computed(() => {
-    return weather.value;
-  });
+  const getWeatherCurrentLocation = computed(() => weather.value);
+  const getSpinnerState = computed(() => loadingVisible.value);
 
   return {
     weather,
     setWeatherCurrentLocation,
     getWeatherCurrentLocation,
+    getSpinnerState,
   };
 });
