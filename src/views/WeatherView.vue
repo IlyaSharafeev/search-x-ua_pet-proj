@@ -72,7 +72,7 @@
             span.day-temp(v-if="speedUnit === 'mph'") {{ weatherStore.getWeatherCurrentLocation.current.gust_mph }} m / h
           .clear
       .location-container
-        button.location-button(@click="submit") Change location
+        button.location-button(@click="getWeatherGeolocation") Weather of my location
           vue-feather(type="map-pin")
 
         stripe-checkout(
@@ -86,13 +86,18 @@
         )
     .search-side
       .input-group.mb-3
-        span#inputGroup-sizing-default.input-group-text Default
         input.form-control(
           type="text",
-          aria-label="Sizing example input",
-          aria-describedby="inputGroup-sizing-default"
+          placeholder="Check the city's weather",
+          aria-label="Check the city's weather",
+          aria-describedby="button-addon2",
+          @keyup.enter="searchLocation",
+          v-model="searchedCity"
         )
-
+        button#button-addon2.btn.btn-outline-secondary(
+          type="button",
+          @click="searchLocation"
+        ) Search
 SpinnerView(v-else)
 </template>
 
@@ -102,11 +107,13 @@ import { onMounted, ref } from "vue";
 import { useWeatherStore } from "../store/weather";
 import SpinnerView from "./SpinnerView";
 import CONSTANTS from "../constants/index";
+import { getCoordinates } from "../scripts/getLocationUser";
 
 const checkoutRef = ref(null);
 const weatherStore = useWeatherStore();
 const temperatureUnit = ref("C");
 const speedUnit = ref("kph");
+const searchedCity = ref("");
 
 const publishableKey = ref(
   "pk_test_51METmBD1sVm68Cku2ln2Me93Wp255VHtagJz4c95XHXP7Y2OgdQSMgt4PZ7JljB8s1eKLBGyuOwJ67JcANzRqjht00T5y5lwSF"
@@ -121,8 +128,8 @@ const lineItems = ref([
 const successUrl = "http://localhost:8080/weather";
 const cancelUrl = "http://localhost:8080/error";
 
-const submit = () => {
-  checkoutRef.value.redirectToCheckout();
+const getWeatherGeolocation = () => {
+  // checkoutRef.value.redirectToCheckout();
 };
 
 const getCurrentDay = () => {
@@ -153,8 +160,14 @@ const changeInputSpeedUnit = () => {
   }
 };
 
+const searchLocation = () => {
+  weatherStore.setWeatherCurrentLocation(searchedCity.value);
+};
+
 onMounted(async () => {
   await weatherStore.setWeatherCurrentLocation("Lviv");
+  let city = getCoordinates();
+  console.log(city);
 });
 </script>
 
@@ -193,6 +206,8 @@ $gradient: linear-gradient(135deg, #72edf2 10%, #5151e5 100%);
   color: #ffffff;
   height: 400px;
   position: relative;
+  display: flex;
+  align-items: center;
 }
 .weather-side {
   position: relative;
