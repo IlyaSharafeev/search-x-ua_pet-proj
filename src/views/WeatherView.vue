@@ -1,9 +1,26 @@
 <template lang="pug">
 .wrapper(v-if="weatherStore.getSpinnerState")
   .container(v-if="weatherStore.getWeatherCurrentLocation")
-    .switch__1
-      input#switch-1(type="checkbox")
-      label(for="switch-1")
+    .form-check.form-switch.form-switch-temperature
+      input#flexSwitchCheckChecked.form-check-input(
+        type="checkbox",
+        role="switch",
+        :checked="temperatureUnit === 'C'",
+        @change="changeInputTemperatureUnit"
+      )
+      label.form-check-label(for="flexSwitchCheckChecked")
+        span(v-if="temperatureUnit === 'C'") °C
+        span(v-if="temperatureUnit === 'F'") °F
+    .form-check.form-switch.form-switch-speed
+      input#flexSwitchCheckChecked.form-check-input(
+        type="checkbox",
+        role="switch",
+        :checked="speedUnit === 'kph'",
+        @change="changeInputSpeedUnit"
+      )
+      label.form-check-label(for="flexSwitchCheckChecked")
+        span(v-if="speedUnit === 'kph'") km / h
+        span(v-if="speedUnit === 'mph'") m / h
     .weather-side
       .weather-gradient
       .date-container
@@ -14,7 +31,8 @@
         span.location {{ weatherStore.getWeatherCurrentLocation.location.country }}
       .weather-container
         vue-faether.weather-icon(type="sun")
-        h1.weather-temp {{ weatherStore.getWeatherCurrentLocation.current.temp_c }}°C
+        h1.weather-temp(v-if="temperatureUnit === 'C'") {{ weatherStore.getWeatherCurrentLocation.current.temp_c }}°C
+        h1.weather-temp(v-else) {{ weatherStore.getWeatherCurrentLocation.current.temp_f }}°F
         h3.weather-desc {{ weatherStore.getWeatherCurrentLocation.current.condition.text }}
     .info-side
       .today-info-container
@@ -29,26 +47,29 @@
             .clear
           .wind
             span.title WIND
-            span.value {{ weatherStore.getWeatherCurrentLocation.current.wind_kph }} km/h
+            span.value(v-if="speedUnit === 'kph'") {{ weatherStore.getWeatherCurrentLocation.current.wind_kph }} km/h
+            span.value(v-if="speedUnit === 'mph'") {{ weatherStore.getWeatherCurrentLocation.current.wind_mph }} m/h
             .clear
       .week-container
         ul.week-list
-          li.active
-            vue-feather.day-icon(type="sun")
-            span.day-name Tue
-            span.day-temp 29°C
           li
-            vue-feather.day-icon(type="cloud")
-            span.day-name Wed
-            span.day-temp 21°C
+            vue-feather.day-icon(type="wind")
+            span.day-name Degree
+            span.day-temp {{ weatherStore.getWeatherCurrentLocation.current.wind_degree }}°
           li
-            vue-feather.day-icon(type="cloud-snow")
-            span.day-name Thu
-            span.day-temp 08°C
+            vue-feather.day-icon(type="navigation")
+            span.day-name Dir
+            span.day-temp {{ weatherStore.getWeatherCurrentLocation.current.wind_dir }}
           li
-            vue-feather.day-icon(type="cloud-rain")
-            span.day-name Fry
-            span.day-temp 19°C
+            vue-feather.day-icon(type="thermometer")
+            span.day-name Feel
+            span.day-temp(v-if="temperatureUnit === 'C'") {{ weatherStore.getWeatherCurrentLocation.current.feelslike_c }}°C
+            span.day-temp(v-if="temperatureUnit === 'F'") {{ weatherStore.getWeatherCurrentLocation.current.feelslike_f }}°F
+          li
+            vue-feather.day-icon(type="wind")
+            span.day-name Gust
+            span.day-temp(v-if="speedUnit === 'kph'") {{ weatherStore.getWeatherCurrentLocation.current.gust_kph }} km / h
+            span.day-temp(v-if="speedUnit === 'mph'") {{ weatherStore.getWeatherCurrentLocation.current.gust_mph }} m / h
           .clear
       .location-container
         button.location-button(@click="submit") Change location
@@ -63,6 +84,15 @@
           :cancel-url="cancelUrl",
           @loading="(v) => (loading = v)"
         )
+    .search-side
+      .input-group.mb-3
+        span#inputGroup-sizing-default.input-group-text Default
+        input.form-control(
+          type="text",
+          aria-label="Sizing example input",
+          aria-describedby="inputGroup-sizing-default"
+        )
+
 SpinnerView(v-else)
 </template>
 
@@ -75,6 +105,9 @@ import CONSTANTS from "../constants/index";
 
 const checkoutRef = ref(null);
 const weatherStore = useWeatherStore();
+const temperatureUnit = ref("C");
+const speedUnit = ref("kph");
+
 const publishableKey = ref(
   "pk_test_51METmBD1sVm68Cku2ln2Me93Wp255VHtagJz4c95XHXP7Y2OgdQSMgt4PZ7JljB8s1eKLBGyuOwJ67JcANzRqjht00T5y5lwSF"
 );
@@ -98,9 +131,30 @@ const getCurrentDay = () => {
   return CONSTANTS.days[day - 1];
 };
 
+const changeInputTemperatureUnit = () => {
+  if (temperatureUnit.value === "F") {
+    temperatureUnit.value = "C";
+    return;
+  }
+
+  if (temperatureUnit.value === "C") {
+    temperatureUnit.value = "F";
+  }
+};
+
+const changeInputSpeedUnit = () => {
+  if (speedUnit.value === "kph") {
+    speedUnit.value = "mph";
+    return;
+  }
+
+  if (speedUnit.value === "mph") {
+    speedUnit.value = "kph";
+  }
+};
+
 onMounted(async () => {
   await weatherStore.setWeatherCurrentLocation("Lviv");
-  await console.log(weatherStore.getWeatherCurrentLocation);
 });
 </script>
 
@@ -138,6 +192,7 @@ $gradient: linear-gradient(135deg, #72edf2 10%, #5151e5 100%);
   background-color: #222831;
   color: #ffffff;
   height: 400px;
+  position: relative;
 }
 .weather-side {
   position: relative;
@@ -243,10 +298,13 @@ $gradient: linear-gradient(135deg, #72edf2 10%, #5151e5 100%);
     float: left;
     padding: 15px;
     cursor: pointer;
+    min-width: 90px;
     -webkit-transition: 200ms ease;
     -o-transition: 200ms ease;
     transition: 200ms ease;
     border-radius: 10px;
+    display: flex;
+    flex-direction: column;
     &:hover {
       -webkit-transform: scale(1.1);
       -ms-transform: scale(1.1);
@@ -319,72 +377,11 @@ $gradient: linear-gradient(135deg, #72edf2 10%, #5151e5 100%);
   }
 }
 
-/*  SWITCH  */
-$shadow: 0.3rem 0.3rem 0.6rem var(--greyLight-2),
-  -0.2rem -0.2rem 0.5rem var(--white);
-$inner-shadow: inset 0.2rem 0.2rem 0.5rem var(--greyLight-2),
-  inset -0.2rem -0.2rem 0.5rem var(--white);
+.form-check.form-switch.form-switch-temperature {
+  top: 20px;
+}
 
-.switch {
-  grid-column: 1 / 2;
-  display: grid;
-  grid-template-columns: repeat(2, min-content);
-  grid-gap: 3rem;
-  justify-self: center;
-  input {
-    display: none;
-  }
-
-  &__1,
-  &__2 {
-    width: 6rem;
-    label {
-      display: flex;
-      align-items: center;
-      width: 100%;
-      height: 3rem;
-      box-shadow: $shadow;
-      background: rgba(255, 255, 255, 0);
-      position: relative;
-      cursor: pointer;
-      border-radius: 1.6rem;
-
-      &::after {
-        content: "";
-        position: absolute;
-        left: 0.4rem;
-        width: 2.1rem;
-        height: 2.1rem;
-        border-radius: 50%;
-        background: var(--greyDark);
-        transition: all 0.4s ease;
-      }
-      &::before {
-        content: "";
-        width: 100%;
-        height: 100%;
-        border-radius: inherit;
-        background: linear-gradient(
-          330deg,
-          var(--primary-dark) 0%,
-          var(--primary) 50%,
-          var(--primary-light) 100%
-        );
-        opacity: 0;
-        transition: all 0.4s ease;
-      }
-    }
-  }
-  & input:checked {
-    & ~ label {
-      &::before {
-        opacity: 1;
-      }
-      &::after {
-        left: 57%;
-        background: var(--greyLight-1);
-      }
-    }
-  }
+.form-check.form-switch.form-switch-speed {
+  top: 70px;
 }
 </style>

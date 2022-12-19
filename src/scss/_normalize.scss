@@ -350,3 +350,25 @@ template {
 a {
   text-decoration: none;
 }
+
+//Switch button
+.form-switch {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  display: flex;
+  gap: 58px;
+  flex-direction: row-reverse;
+  align-items: center;
+
+  .form-check-input {
+    width: 50px;
+    height: 25px;
+    cursor: pointer;
+  }
+
+  label {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+  }
+}
