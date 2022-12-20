@@ -15,24 +15,42 @@ const options = {
 export const useWeatherStore = defineStore("weather", () => {
   const weather = ref(null);
   const loadingVisible = ref(false);
+  const stateErrorModal = ref(false);
 
   const setWeatherCurrentLocation = async (searchLocation: string) => {
     options.params.q = searchLocation;
     loadingVisible.value = true;
-    await axios.get(`${api}`, options).then((response) => {
-      weather.value = response.data;
-      return response.data;
-    });
+    await axios
+      .get(`${api}`, options)
+      .then((response) => {
+        weather.value = response.data;
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+        openErrorModal();
+      });
     loadingVisible.value = true;
+  };
+
+  const openErrorModal = () => {
+    stateErrorModal.value = true;
+  };
+
+  const closeErrorModal = () => {
+    stateErrorModal.value = false;
   };
 
   const getWeatherCurrentLocation = computed(() => weather.value);
   const getSpinnerState = computed(() => loadingVisible.value);
+  const getStateErrorModal = computed(() => stateErrorModal.value);
 
   return {
     weather,
     setWeatherCurrentLocation,
     getWeatherCurrentLocation,
     getSpinnerState,
+    getStateErrorModal,
+    closeErrorModal,
   };
 });

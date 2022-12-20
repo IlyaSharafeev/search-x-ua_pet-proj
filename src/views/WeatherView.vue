@@ -101,6 +101,12 @@
       .current-location(v-if="currentCityYourlocation")
         span Your current location: {{ currentCityYourlocation }}
 SpinnerView(v-else)
+ErrorModal(
+  v-if="weatherStore.getStateErrorModal",
+  :is-open="weatherStore.getStateErrorModal",
+  :text-error="'yo, it looks like you entered the wrong city name'",
+  @close="weatherStore.closeErrorModal"
+)
 </template>
 
 <script setup>
@@ -110,6 +116,7 @@ import { useWeatherStore } from "../store/weather";
 import SpinnerView from "./SpinnerView";
 import CONSTANTS from "../constants/index";
 import { getCurrentLocation } from "../scripts/getLocationUser";
+import ErrorModal from "../components/ErrorModal";
 
 const checkoutRef = ref(null);
 const weatherStore = useWeatherStore();
@@ -117,6 +124,7 @@ const temperatureUnit = ref("C");
 const speedUnit = ref("kph");
 const searchedCity = ref("");
 const currentCityYourlocation = ref("");
+const ErrorModalComponent = ref(null);
 
 const publishableKey = ref(
   "pk_test_51METmBD1sVm68Cku2ln2Me93Wp255VHtagJz4c95XHXP7Y2OgdQSMgt4PZ7JljB8s1eKLBGyuOwJ67JcANzRqjht00T5y5lwSF"
@@ -165,8 +173,8 @@ const changeInputSpeedUnit = () => {
   }
 };
 
-const searchLocation = () => {
-  weatherStore.setWeatherCurrentLocation(searchedCity.value);
+const searchLocation = async () => {
+  await weatherStore.setWeatherCurrentLocation(searchedCity.value);
 };
 
 onMounted(async () => {
