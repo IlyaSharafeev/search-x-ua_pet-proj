@@ -72,7 +72,7 @@
             span.day-temp(v-if="speedUnit === 'mph'") {{ weatherStore.getWeatherCurrentLocation.current.gust_mph }} m / h
           .clear
       .location-container
-        button.location-button(@click="getWeatherGeolocation") Weather of my location
+        button.location-button(@click="getWeatherGeolocation") Subscribe to get the weather
           vue-feather(type="map-pin")
 
         stripe-checkout(
@@ -84,7 +84,7 @@
           :cancel-url="cancelUrl",
           @loading="(v) => (loading = v)"
         )
-    .search-side
+    .search-side(v-if="subscriptionOptionsVisible")
       .input-group.mb-3
         input.form-control(
           type="text",
@@ -99,7 +99,7 @@
           @click="searchLocation"
         ) Search
       .current-location(v-if="currentCityYourlocation")
-        span Your current location: {{ currentCityYourlocation }}
+        span.gradient-text Your current location: {{ currentCityYourlocation }}
 SpinnerView(v-else)
 ErrorModal(
   v-if="weatherStore.getStateErrorModal",
@@ -124,7 +124,7 @@ const temperatureUnit = ref("C");
 const speedUnit = ref("kph");
 const searchedCity = ref("");
 const currentCityYourlocation = ref("");
-const ErrorModalComponent = ref(null);
+const subscriptionOptionsVisible = ref(false);
 
 const publishableKey = ref(
   "pk_test_51METmBD1sVm68Cku2ln2Me93Wp255VHtagJz4c95XHXP7Y2OgdQSMgt4PZ7JljB8s1eKLBGyuOwJ67JcANzRqjht00T5y5lwSF"
@@ -136,11 +136,14 @@ const lineItems = ref([
     quantity: 1,
   },
 ]);
-const successUrl = "http://localhost:8080/weather";
+const successUrl = "http://localhost:8080/weather#subscription";
 const cancelUrl = "http://localhost:8080/error";
 
 const getWeatherGeolocation = async () => {
-  // checkoutRef.value.redirectToCheckout();
+  if (!subscriptionOptionsVisible.value) {
+    checkoutRef.value.redirectToCheckout();
+    return;
+  }
 
   currentCityYourlocation.value = await getCurrentLocation();
 };
@@ -179,6 +182,11 @@ const searchLocation = async () => {
 
 onMounted(async () => {
   await weatherStore.setWeatherCurrentLocation("Lviv");
+
+  console.log(document.location.hash);
+  if (document.location.hash === "#subscription") {
+    subscriptionOptionsVisible.value = true;
+  }
 });
 </script>
 
@@ -368,6 +376,7 @@ $gradient: linear-gradient(135deg, #72edf2 10%, #5151e5 100%);
   padding: 25px 35px;
 }
 .location-button {
+  text-transform: uppercase;
   outline: none;
   width: 100%;
   -webkit-box-sizing: border-box;
@@ -417,5 +426,58 @@ $gradient: linear-gradient(135deg, #72edf2 10%, #5151e5 100%);
   right: 40px;
   font-weight: bold;
   text-transform: uppercase;
+}
+
+/* Tutorial on https://fossheim.io/writing/posts/css-text-gradient. */
+/* Move the background and make it smaller. */
+/* Animation shown when entering the page and after the hover animation. */
+@keyframes "rainbow-text-simple-animation-rev" {
+  0% {
+    background-size: 650%;
+  }
+  40% {
+    background-size: 650%;
+  }
+  100% {
+    background-size: 100%;
+  }
+}
+/* Move the background and make it larger. */
+/* Animation shown when hovering over the text. */
+@keyframes "rainbow-text-simple-animation" {
+  0% {
+    background-size: 100%;
+  }
+  80% {
+    background-size: 650%;
+  }
+  100% {
+    background-size: 650%;
+  }
+}
+/* Style the rest of the page. */
+.gradient-text {
+  background-color: #ca4246;
+  background-image: linear-gradient(
+    45deg,
+    #ca4246 16.666%,
+    #e16541 16.666%,
+    #e16541 33.333%,
+    #f18f43 33.333%,
+    #f18f43 50%,
+    #8b9862 50%,
+    #8b9862 66.666%,
+    #476098 66.666%,
+    #476098 83.333%,
+    #a7489b 83.333%
+  );
+  background-size: 100%;
+  background-repeat: repeat;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: rainbow-text-simple-animation-rev 0.75s ease forwards;
+  &:hover {
+    animation: rainbow-text-simple-animation 0.5s ease-in forwards;
+  }
 }
 </style>
