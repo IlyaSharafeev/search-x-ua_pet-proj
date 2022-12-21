@@ -29,7 +29,7 @@ onMounted(() => {
       labels: Array.from({ length: timerStore.getTime.length }).fill(""),
       datasets: [
         {
-          label: "# of Votes",
+          label: "Your progress",
           data: timerStore.getTime,
           borderWidth: 1,
         },
