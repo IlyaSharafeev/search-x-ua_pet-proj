@@ -72,7 +72,10 @@
             span.day-temp(v-if="speedUnit === 'mph'") {{ weatherStore.getWeatherCurrentLocation.current.gust_mph }} m / h
           .clear
       .location-container
-        button.location-button(@click="getWeatherGeolocation")
+        button.location-button(
+          @click="getWeatherGeolocation",
+          :class="{ 'location-button--disabled': subscriptionOptionsVisible }"
+        )
           span(v-if="subscriptionOptionsVisible") Subscribed
           span(v-else) Subscribe to get the weather
           vue-feather(type="map-pin")
@@ -413,6 +416,10 @@ $gradient: linear-gradient(135deg, #72edf2 10%, #5151e5 100%);
     height: 1em;
     width: auto;
     margin-right: 5px;
+  }
+  &.location-button--disabled {
+    background-color: gray;
+    background-image: none;
   }
 }
 
