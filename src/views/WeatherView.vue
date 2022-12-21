@@ -72,7 +72,9 @@
             span.day-temp(v-if="speedUnit === 'mph'") {{ weatherStore.getWeatherCurrentLocation.current.gust_mph }} m / h
           .clear
       .location-container
-        button.location-button(@click="getWeatherGeolocation") Subscribe to get the weather
+        button.location-button(@click="getWeatherGeolocation")
+          span(v-if="subscriptionOptionsVisible") Subscribed
+          span(v-else) Subscribe to get the weather
           vue-feather(type="map-pin")
 
         stripe-checkout(
@@ -186,6 +188,7 @@ onMounted(async () => {
 
   if (document.location.hash === "#subscription") {
     subscriptionOptionsVisible.value = true;
+    currentCityYourlocation.value = await getCurrentLocation();
   }
 });
 </script>
