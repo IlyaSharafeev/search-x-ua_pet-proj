@@ -1,0 +1,52 @@
+/* Tutorial on https://fossheim.io/writing/posts/css-text-gradient. */
+/* Move the background and make it smaller. */
+/* Animation shown when entering the page and after the hover animation. */
+@keyframes rainbow-text-simple-animation-rev {
+  0% {
+    background-size: 650%;
+  }
+  40% {
+    background-size: 650%;
+  }
+  100% {
+    background-size: 100%;
+  }
+}
+/* Move the background and make it larger. */
+/* Animation shown when hovering over the text. */
+@keyframes rainbow-text-simple-animation {
+  0% {
+    background-size: 100%;
+  }
+  80% {
+    background-size: 650%;
+  }
+  100% {
+    background-size: 650%;
+  }
+}
+/* Style the rest of the page. */
+.gradient-text {
+  background-color: #ca4246;
+  background-image: linear-gradient(
+                  45deg,
+                  #ca4246 16.666%,
+                  #e16541 16.666%,
+                  #e16541 33.333%,
+                  #f18f43 33.333%,
+                  #f18f43 50%,
+                  #8b9862 50%,
+                  #8b9862 66.666%,
+                  #476098 66.666%,
+                  #476098 83.333%,
+                  #a7489b 83.333%
+  );
+  background-size: 100%;
+  background-repeat: repeat;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: rainbow-text-simple-animation-rev 0.75s ease forwards;
+  &:hover {
+    animation: rainbow-text-simple-animation 0.5s ease-in forwards;
+  }
+}
