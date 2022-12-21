@@ -31,14 +31,6 @@ const routes: Array<RouteRecordRaw> = [
         /* webpackChunkName: "keyboard-training" */ "../views/WeatherView.vue"
       ),
   },
-  {
-    path: "/registration",
-    name: "Registration",
-    component: () =>
-      import(
-        /* webpackChunkName: "registration" */ "../views/RegistrationView.vue"
-      ),
-  },
 ];
 
 export default routes;

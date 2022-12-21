@@ -74,7 +74,7 @@
       .location-container
         button.location-button(
           @click="getWeatherGeolocation",
-          :class="{ 'location-button--disabled': subscriptionOptionsVisible }"
+          :class="{ 'location-buttons--disabled': subscriptionOptionsVisible }"
         )
           span(v-if="subscriptionOptionsVisible") Subscribed
           span(v-else) Subscribe to get the weather
@@ -95,7 +95,7 @@
           type="text",
           placeholder="Check the city's weather",
           aria-label="Check the city's weather",
-          aria-describedby="button-addon2",
+          aria-describedby="buttons-addon2",
           @keyup.enter="searchLocation",
           v-model="searchedCity"
         )
@@ -121,7 +121,7 @@ import { useWeatherStore } from "../store/weather";
 import SpinnerView from "./SpinnerView";
 import CONSTANTS from "../constants/index";
 import { getCurrentLocation } from "../scripts/getLocationUser";
-import ErrorModal from "../components/ErrorModal";
+import ErrorModal from "../components/modals/ErrorModal";
 
 const checkoutRef = ref(null);
 const weatherStore = useWeatherStore();
@@ -131,9 +131,7 @@ const searchedCity = ref("");
 const currentCityYourlocation = ref("");
 const subscriptionOptionsVisible = ref(false);
 
-const publishableKey = ref(
-  "pk_test_51METmBD1sVm68Cku2ln2Me93Wp255VHtagJz4c95XHXP7Y2OgdQSMgt4PZ7JljB8s1eKLBGyuOwJ67JcANzRqjht00T5y5lwSF"
-);
+const publishableKey = ref(process.env.VUE_APP_STRIPE_KEY);
 const loading = ref(false);
 const lineItems = ref([
   {
@@ -200,11 +198,6 @@ onMounted(async () => {
 @import "https://fonts.googleapis.com/css?family=Montserrat:400,700,900&display=swap";
 @import "../scss/text.scss";
 $gradient: linear-gradient(135deg, #72edf2 10%, #5151e5 100%);
-* {
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  line-height: 1.25em;
-}
 .clear {
   clear: both;
 }

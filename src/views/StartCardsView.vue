@@ -31,12 +31,6 @@ const cards = [
     button: "See",
     link: "WeatherView",
   },
-  {
-    title: "Explore The Galaxy",
-    copy: "Seriously, straight up, just blast off into outer space today",
-    button: "Book Now",
-    link: "SearchView",
-  },
 ];
 </script>
 
@@ -48,20 +42,6 @@ $imageIds: "background-spotify.png", "background-spotify-2.png",
 
 $bp-mobile: 600px;
 $bp-tablet: 900px;
-
-* {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  height: 100%;
-}
-
-body {
-  display: grid;
-  place-items: center;
-}
 
 .page-content {
   display: flex;

@@ -112,10 +112,10 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import StopWatch from "@/components/StopWatch.vue";
-import ToggleButton from "@/components/ToggleButton.vue";
-import StatisticModal from "@/components/StatisticModal.vue";
+import ToggleButton from "@/components/buttons/ToggleButton.vue";
+import StatisticModal from "@/components/modals/StatisticModal.vue";
 import { useTimeStore } from "@/store/timer";
-import PyroEffects from "@/components/PyroEffects.vue";
+import PyroEffects from "@/components/effects/PyroEffects.vue";
 
 // const keys = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"];
 let keys = [..."ABC"];
@@ -142,7 +142,7 @@ const getRandomKey = () => {
 };
 
 const targetRandomKey = () => {
-  //If the button is not already selected
+  //If the buttons is not already selected
   if (!selectKey.value) {
     const key = document.getElementById(getRandomKey()) as HTMLBodyElement;
     key.classList.add("selected");
@@ -421,7 +421,7 @@ li {
   }
 }
 
-/*Pulsing button*/
+/*Pulsing buttons*/
 .pulse {
   display: block;
   width: 42px;

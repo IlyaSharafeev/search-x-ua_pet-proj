@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-import SearchInput from "@/components/SearchInput.vue";
+import SearchInput from "@/components/inputs/SearchInput.vue";
 import ListGroup from "@/components/ListGroup.vue";
 import { useSpotifyStore } from "@/store/spotify";
 

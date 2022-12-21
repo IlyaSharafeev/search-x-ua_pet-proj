@@ -13,7 +13,7 @@ const options = {
     numberOfTopResults: "5",
   },
   headers: {
-    "X-RapidAPI-Key": "f1c9b7bff6msh6ce128dd9894ed2p1185d2jsna3727f8b0c21",
+    "X-RapidAPI-Key": process.env.VUE_APP_SPOTIFY_API_KEY,
     "X-RapidAPI-Host": "spotify23.p.rapidapi.com",
   },
 };

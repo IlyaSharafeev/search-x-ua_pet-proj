@@ -25,7 +25,6 @@
     "dayjs": "^1.11.4",
     "express": "^4.18.2",
     "feather-icons": "4",
-    "jquery": "^3.6.1",
     "lodash": "^4.17.21",
     "pinia": "^2.0.22",
     "pinia-plugin-persistedstate": "^2.2.0",
