@@ -28,6 +28,10 @@ export const useSpotifyStore = defineStore("spotifyStore", () => {
     });
   };
 
+  const clearStore = () => {
+    spotify.value = null;
+  };
+
   const getSpotify = computed((): Tracks => {
     return spotify.value;
   });
@@ -36,5 +40,6 @@ export const useSpotifyStore = defineStore("spotifyStore", () => {
     spotify,
     searchSpotify,
     getSpotify,
+    clearStore,
   };
 });

@@ -1,6 +1,6 @@
 <template lang="html">
-  <div class="search-view" :class="{ found: spotifyStore.spotify }">
-    <SearchInput :found="spotifyStore.spotify" />
+  <div class="search-view" :class="{ found: spotifyStore.getSpotify }">
+    <SearchInput :found="spotifyStore.getSpotify" />
     <div class="w-100 d-flex flex-column">
       <ListGroup
         v-for="(track, key) in spotifyStore.getSpotify"
@@ -15,8 +15,13 @@
 import SearchInput from "@/components/inputs/SearchInput.vue";
 import ListGroup from "@/components/ListGroup.vue";
 import { useSpotifyStore } from "@/store/spotify";
+import { onUnmounted } from "vue";
 
 const spotifyStore = useSpotifyStore();
+
+onUnmounted(() => {
+  spotifyStore.clearStore();
+});
 </script>
 
 <style scoped lang="scss">
